@@ -72,26 +72,22 @@ function drawBubbles(scale = 1) {
 		.on("mouseover", function (e, d) {
 			// d3.select(this).classed("selected", true);
 			d3.select(this)
-				.attr("stroke", "gray")
+				.attr("stroke", "black")
 				.attr("stroke-width", 2 / scale);
-			let rect = e.target.getBoundingClientRect();
-			let x = rect.left;
-			let y = rect.top;
+			// let rect = e.target.getBoundingClientRect();
 			let r = d3.select(this).attr("r");
-			console.log(x, y, r);
 
 			tooltip
 				.style("display", "block")
-				// .style("top", `${y}px`)
-				// .style("left", `${x}px`);
-				.style("top", `${y}px`)
-				.style("left", `${x}px`);
+				.style("top", `${e.pageY}px`)
+				.style("left", `${e.pageX}px`);
 			tooltip.select(".county").text(`${d.county}, ${d.state}`);
 			tooltip.select(".case").text(`${d3.format(",")(d.cases)}`);
 			tooltip.select(".death").text(`${d3.format(",")(d.deaths)}`);
 		})
-		.on("mouseout", () => {
+		.on("mouseout", function () {
 			tooltip.style("display", "none");
+			d3.select(this).attr("stroke-width", 0);
 		});
 }
 
