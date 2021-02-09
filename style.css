@@ -2,6 +2,7 @@
 
 body {
 	font-family: "Noto Sans", sans-serif;
+	background: black;
 }
 
 .container {
@@ -11,7 +12,7 @@ body {
 
 g.map > path {
 	fill: none;
-	stroke: #ccc;
+	stroke: #575757;
 }
 
 g.bubbles > circle {

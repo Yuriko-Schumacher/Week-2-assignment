@@ -50,7 +50,7 @@ Promise.all([
 	colorScale = d3
 		.scaleSequential()
 		.domain(d3.extent(covidData, (d) => +d.deaths))
-		.range(["#008000", "black"]);
+		.interpolator(d3.interpolateOranges);
 
 	drawBubbles();
 });
