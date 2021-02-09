@@ -45,12 +45,12 @@ Promise.all([
 	radiusScale = d3
 		.scaleSqrt()
 		.domain(d3.extent(covidData, (d) => +d.cases))
-		.range([1, 20]);
+		.range([1.2, 20]);
 
 	colorScale = d3
 		.scaleSequential()
-		.domain(d3.extent(covidData, (d) => +d.deaths).reverse())
-		.interpolator(d3.interpolatePiYG);
+		.domain(d3.extent(covidData, (d) => +d.deaths))
+		.range(["#008000", "black"]);
 
 	drawBubbles();
 });
@@ -87,7 +87,9 @@ function drawBubbles(scale = 1) {
 		})
 		.on("mouseout", function () {
 			tooltip.style("display", "none");
-			d3.select(this).attr("stroke-width", 0);
+			d3.select(this)
+				.attr("stroke", "#ccc")
+				.attr("stroke-width", 1 / scale);
 		});
 }
 
