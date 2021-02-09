@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viz Tech 2 | Week 2</title>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Viz Tech 2 | Week 2</title>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.5.0/d3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-hexbin/0.2.2/d3-hexbin.min.js" integrity="sha512-UdiUWVPl/Llj9EsBhtsgPBWwvCJr8S8/DKQzIqh6qLAfqiziqzJBcVl3xPRJChhKCBlFwOEIbyR18af9rVaAZw==" crossorigin="anonymous"></script>
-</head>
-<body>
-    <div class="container">
-        <h1>Playing with Maps</h1>
-        <svg></svg>
-    </div>
-    <div id="map-tooltip">
-        <div class="name"></div>
-        <div class="population"></div>
-        <div class="medage"></div>
-    </div>
-    <script src="script-4.tooltip.js"></script>
-</body>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.5.0/d3.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/d3-hexbin/0.2.2/d3-hexbin.min.js"
+			integrity="sha512-UdiUWVPl/Llj9EsBhtsgPBWwvCJr8S8/DKQzIqh6qLAfqiziqzJBcVl3xPRJChhKCBlFwOEIbyR18af9rVaAZw=="
+			crossorigin="anonymous"
+		></script>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Playing with Maps</h1>
+			<svg></svg>
+		</div>
+		<div id="map-tooltip">
+			<ul>
+				<li><span class="county"></span></li>
+				<li>Confirmed: <span class="case"></span></li>
+				<li>Deaths: <span class="death"></span></li>
+			</ul>
+		</div>
+		<script src="script.js"></script>
+	</body>
 </html>

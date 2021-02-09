@@ -1,42 +1,104 @@
-const margin = {t: 50, r:50, b: 50, l: 50};
-const size = {w: 800, h: 800};
-const svg = d3.select('svg');
+const margin = { t: 50, r: 50, b: 50, l: 50 };
+const size = { w: 800, h: 800 };
+const svg = d3.select("svg");
 
 // defining a container group
 // which will contain everything within the SVG
 // we can transform it to make things everything zoomable
-const containerG = svg.append('g').classed('container', true);
-let mapData, popData, hexbinPopData;
-let radiusScale, projection, hexbin;
+const containerG = svg.append("g").classed("container", true);
+let mapData, covidData, bubblesG;
+let radiusScale, colorScale, projection;
 
-svg.attr('width', size.w)
-    .attr('height', size.h);
+let zoom = d3.zoom().scaleExtent([1, 10]).on("zoom", zoomed);
+
+svg.call(zoom);
+
+svg.attr("width", size.w).attr("height", size.h);
 
 Promise.all([
-    d3.json('data/maps/us-states.geo.json'),
-    d3.csv('data/us_county.csv')
+	d3.json("data/maps/us-states.geo.json"),
+	d3.csv("data/covid_data.csv"),
 ]).then(function (datasets) {
-    mapData = datasets[0];
-    popData = datasets[1];
+	mapData = datasets[0];
+	covidData = datasets[1];
+	console.log(datasets);
 
-    // --------- DRAW MAP ----------
-    // creating a group for map paths
-    let mapG = containerG.append('g').classed('map', true);
+	// --------- DRAW MAP ----------
+	let mapG = containerG.append("g").classed("map", true);
 
-    // defining a projection that we will use
-    projection = d3.geoAlbersUsa()
-        .fitSize([size.w, size.h], mapData);
+	projection = d3.geoAlbersUsa().fitSize([size.w, size.h], mapData);
+	covidData = covidData.filter((d) => projection([d.long, d.lat]));
 
-    // defining a geoPath function
-    let path = d3.geoPath(projection);
+	let path = d3.geoPath(projection);
 
-    // adding county paths
-    mapG.selectAll('path')
-        .data(mapData.features)
-        .enter()
-        .append('path')
-        .attr('d', function(d) {
-            return path(d);
-        });
-    
+	mapG.selectAll("path")
+		.data(mapData.features)
+		.enter()
+		.append("path")
+		.attr("d", function (d) {
+			return path(d);
+		});
+
+	// --------- DRAW BUBBLES ----------
+	bubblesG = containerG.append("g").classed("bubbles", true);
+
+	radiusScale = d3
+		.scaleSqrt()
+		.domain(d3.extent(covidData, (d) => +d.cases))
+		.range([1, 20]);
+
+	colorScale = d3
+		.scaleSequential()
+		.domain(d3.extent(covidData, (d) => +d.deaths).reverse())
+		.interpolator(d3.interpolatePiYG);
+
+	drawBubbles();
 });
+
+function drawBubbles(scale = 1) {
+	let bubblesSelection = bubblesG.selectAll("circle").data(covidData);
+	let bubbles = bubblesSelection
+		.join("circle")
+		.attr("cx", (d) => `${projection([d.long, d.lat])[0]}`)
+		.attr("cy", (d) => `${projection([d.long, d.lat])[1]}`)
+		.attr("r", (d) => radiusScale(+d.cases))
+		// .attr("transform", (d) => `translate(${projection([d.long, d.lat])})`)
+		.style("fill", (d) => colorScale(+d.deaths))
+		.attr("stroke", "#ccc")
+		.attr("stroke-width", 1 / scale);
+
+	let tooltip = d3.select("#map-tooltip");
+	bubbles
+		.on("mouseover", function (e, d) {
+			// d3.select(this).classed("selected", true);
+			d3.select(this)
+				.attr("stroke", "gray")
+				.attr("stroke-width", 2 / scale);
+			let rect = e.target.getBoundingClientRect();
+			let x = rect.left;
+			let y = rect.top;
+			let r = d3.select(this).attr("r");
+			console.log(x, y, r);
+
+			tooltip
+				.style("display", "block")
+				// .style("top", `${y}px`)
+				// .style("left", `${x}px`);
+				.style("top", `${y}px`)
+				.style("left", `${x}px`);
+			tooltip.select(".county").text(`${d.county}, ${d.state}`);
+			tooltip.select(".case").text(`${d3.format(",")(d.cases)}`);
+			tooltip.select(".death").text(`${d3.format(",")(d.deaths)}`);
+		})
+		.on("mouseout", () => {
+			tooltip.style("display", "none");
+		});
+}
+
+function zoomed(e) {
+	let transform = e.transform;
+	containerG
+		.attr("transform", transform)
+		.attr("stroke-width", 1 / transform.k);
+	drawBubbles(transform.k);
+}

@@ -1,0 +1,29 @@
+---
+title: "Week-2 assignment"
+author: "Yuriko Schumacher"
+date: "2/7/2021"
+output: html_document
+---
+```{r load library and data}
+library(tidyverse)
+data.uploaded <- read_csv("data/covid_us_county_latest.csv")
+
+df <- read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-07-2021.csv"))
+
+df.us <- df %>% 
+  filter(Country_Region == "US")
+
+df.reduced <- df.us %>% 
+  select(fips = FIPS,
+         county = Admin2,
+         state = Province_State,
+         date = Last_Update,
+         lat = Lat,
+         long = Long_,
+         cases = Confirmed,
+         deaths = Deaths) 
+
+write_csv(df.reduced, "data/covid_data.csv")
+
+```
+
