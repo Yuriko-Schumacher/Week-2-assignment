@@ -1,5 +1,5 @@
 const margin = { t: 50, r: 50, b: 50, l: 50 };
-const size = { w: 800, h: 800 };
+const size = { w: 800, h: 550 };
 const svg = d3.select("svg");
 
 // defining a container group
@@ -50,9 +50,16 @@ Promise.all([
 	colorScale = d3
 		.scaleSequential()
 		.domain(d3.extent(covidData, (d) => +d.deaths))
-		.interpolator(d3.interpolateOranges);
+		.interpolator(d3.interpolateHsl("yellow", "purple"));
 
 	drawBubbles();
+	console.log(d3.min(covidData, (d) => +d.cases));
+	console.log(
+		(d3.max(covidData, (d) => +d.cases) -
+			d3.min(covidData, (d) => +d.cases)) /
+			2
+	);
+	console.log(d3.max(covidData, (d) => +d.cases));
 });
 
 function drawBubbles(scale = 1) {
@@ -65,7 +72,7 @@ function drawBubbles(scale = 1) {
 		// .attr("transform", (d) => `translate(${projection([d.long, d.lat])})`)
 		.style("fill", (d) => colorScale(+d.deaths))
 		.attr("stroke", "#ccc")
-		.attr("stroke-width", 1 / scale);
+		.attr("stroke-width", 0.5 / scale);
 
 	let tooltip = d3.select("#map-tooltip");
 	bubbles
@@ -89,7 +96,7 @@ function drawBubbles(scale = 1) {
 			tooltip.style("display", "none");
 			d3.select(this)
 				.attr("stroke", "#ccc")
-				.attr("stroke-width", 1 / scale);
+				.attr("stroke-width", 0.5 / scale);
 		});
 }
 
@@ -97,6 +104,6 @@ function zoomed(e) {
 	let transform = e.transform;
 	containerG
 		.attr("transform", transform)
-		.attr("stroke-width", 1 / transform.k);
+		.attr("stroke-width", 0.5 / transform.k);
 	drawBubbles(transform.k);
 }

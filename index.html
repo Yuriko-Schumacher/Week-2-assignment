@@ -16,7 +16,29 @@
 	<body>
 		<div class="container">
 			<h1>Playing with Maps</h1>
+			<ul class="info">
+				<li>ARTG 5430</li>
+				<li>Week-2 Assignment</li>
+				<li>Yuriko Schumacher</li>
+			</ul>
+			<br />
+			<h2>Number of COVID-19 deaths and confirmed cases in the U.S.</h2>
+			(as of February 7)
+			<br /><br />
+
+			<div class="legend">
+				<img src="image/sizeLegend.png" alt="" width="150" />
+				<img src="image/colorLegend.png" alt="" width="135" />
+			</div>
 			<svg></svg>
+			<div class="source">
+				Source:
+				<a
+					href="https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_daily_reports/02-07-2021.csv"
+					target="_blank"
+					>Johns Hopkins Univerisy</a
+				>
+			</div>
 		</div>
 		<div id="map-tooltip">
 			<ul>
@@ -25,6 +47,8 @@
 				<li>Deaths: <span class="death"></span></li>
 			</ul>
 		</div>
+		<br /><br /><br /><br />
+
 		<script src="script.js"></script>
 	</body>
 </html>
