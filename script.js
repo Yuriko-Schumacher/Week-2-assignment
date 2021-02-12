@@ -53,13 +53,6 @@ Promise.all([
 		.interpolator(d3.interpolateHsl("yellow", "purple"));
 
 	drawBubbles();
-	console.log(d3.min(covidData, (d) => +d.cases));
-	console.log(
-		(d3.max(covidData, (d) => +d.cases) -
-			d3.min(covidData, (d) => +d.cases)) /
-			2
-	);
-	console.log(d3.max(covidData, (d) => +d.cases));
 });
 
 function drawBubbles(scale = 1) {
@@ -68,7 +61,7 @@ function drawBubbles(scale = 1) {
 		.join("circle")
 		.attr("cx", (d) => `${projection([d.long, d.lat])[0]}`)
 		.attr("cy", (d) => `${projection([d.long, d.lat])[1]}`)
-		.attr("r", (d) => radiusScale(+d.cases))
+		.attr("r", (d) => radiusScale(+d.cases) / scale)
 		// .attr("transform", (d) => `translate(${projection([d.long, d.lat])})`)
 		.style("fill", (d) => colorScale(+d.deaths))
 		.attr("stroke", "#ccc")
